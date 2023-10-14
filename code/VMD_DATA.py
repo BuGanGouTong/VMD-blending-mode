@@ -11,23 +11,13 @@ import matplotlib.pyplot as plt
 df = pd.read_excel('YH5data.xlsx')
 df1 = pd.read_excel('YH7data.xlsx')
 data_files1 = np.array(df1)
-data1 = data_files1[:,1] #单取日产量一列数据
+data1 = data_files1[:,1]
 data1 = data1.astype('float32')
 
 data_files = np.array(df)
-data = data_files[:,1] #单取日产量一列数据
+data = data_files[:,1]
 data = data.astype('float32')
 
-
-"""  
-alpha、tau、K、DC、init、tol 六个输入参数的无严格要求； 
-alpha 带宽限制 经验取值为 抽样点长度 1.5-2.0 倍； 
-tau 噪声容限 ；
-K 分解模态（IMF）个数； 
-DC 合成信号若无常量，取值为 0；若含常量，则其取值为 1； 
-init 初始化 w 值，当初始化为 1 时，均匀分布产生的随机数； 
-tol 控制误差大小常量，决定精度与迭代次数
-"""
 alpha = 2000      # moderate bandwidth constraint
 tau = 0.            # noise-tolerance (no strict fidelity enforcement)
 K = 5            # 3 modes
@@ -36,19 +26,19 @@ init = 1           # initialize omegas uniformly
 tol = 1e-7
 
 u, u_hat, omega = VMD(data, alpha, tau, K, DC, init, tol)
-# plt.figure()
+plt.figure()
 
-# print(u.shape)
-# plt.plot(u.T)
-# plt.title('Decomposed modes')
+print(u.shape)
+plt.plot(u.T)
+plt.title('Decomposed modes')
 
-# df = pd.DataFrame(u.T)
-# print(df)
-# df.to_excel('VMDdata.xlsx')
+df = pd.DataFrame(u.T)
+print(df)
+df.to_excel('VMDdata.xlsx')
 u1, u_hat, omega = VMD(data1, alpha, tau, K, DC, init, tol)
-# fig1 = plt.figure()
-# plt.plot(data)
-# fig1.suptitle('Original input signal and its components')
+fig1 = plt.figure()
+plt.plot(data)
+fig1.suptitle('Original input signal and its components')
 fig2 = plt.figure(figsize=(10, 8))
 for i in range(K):
     plt.subplot(K+1, 2, 1)
@@ -70,4 +60,3 @@ for i in range(K):
     plt.title('u{}'.format(i + 1),x=0.1, y=0.65)
 plt.tight_layout()
 plt.show()
-
